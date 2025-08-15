@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Enum, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
 from ..database import Base
@@ -16,3 +17,6 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), default=UserRole.CONTRIBUTOR)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # Relationship with ideas
+    ideas = relationship("Idea", back_populates="creator")
