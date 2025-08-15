@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ideaService } from '../services/ideaService';
 
 interface Idea {
     id: number;
@@ -17,21 +16,25 @@ interface Idea {
 
 interface IdeaCardProps {
     idea: Idea;
-    onUpdate?: () => void;
+    onEnhance?: (id: number) => void;
 }
 
-const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onUpdate }) => {
-    const [showFullPitch, setShowFullPitch] = useState(false);
-    const [loadingInsights, setLoadingInsights] = useState(false);
-    const [insights, setInsights] = useState<any>(null);
+const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onEnhance }) => {
+    const [showFullRefinement, setShowFullRefinement] = useState(false);
     const [enhancing, setEnhancing] = useState(false);
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+    const handleEnhance = async () => {
+        setEnhancing(true);
+        if (onEnhance) {
+            await onEnhance(idea.id);
+        }
+        setEnhancing(false);
+    };
+
+    const getScoreColor = (score: number) => {
+        if (score >= 8) return '#4caf50';
+        if (score >= 6) return '#ff9800';
+        return '#f44336';
     };
 
     const getStageColor = (stage: string) => {
@@ -45,196 +48,209 @@ const IdeaCard: React.FC<IdeaCardProps> = ({ idea, onUpdate }) => {
         return colors[stage] || '#666';
     };
 
-    const getFeasibilityColor = (score: number) => {
-        if (score >= 8) return '#4caf50';
-        if (score >= 6) return '#ff9800';
-        return '#f44336';
-    };
-
-    const loadInsights = async () => {
-        setLoadingInsights(true);
-        try {
-            const response = await ideaService.getIdeaInsights(idea.id);
-            setInsights(response);
-        } catch (error) {
-            console.error('Failed to load insights:', error);
-        } finally {
-            setLoadingInsights(false);
-        }
-    };
-
-    const enhanceWithAI = async () => {
-        setEnhancing(true);
-        try {
-            await ideaService.enhanceIdea(idea.id);
-            onUpdate && onUpdate();
-        } catch (error) {
-            console.error('Failed to enhance idea:', error);
-        } finally {
-            setEnhancing(false);
-        }
-    };
-
     return (
         <div className="idea-card">
+            {/* Header Section */}
             <div className="idea-header">
-                <div className="idea-title-section">
+                <div className="title-section">
                     <h3>{idea.title}</h3>
-                    <div className="idea-badges">
+                    <div className="badges">
                         <span 
                             className="stage-badge"
                             style={{ backgroundColor: getStageColor(idea.development_stage) }}
                         >
-                            {idea.development_stage.charAt(0).toUpperCase() + idea.development_stage.slice(1)}
+                            {idea.development_stage.toUpperCase()}
                         </span>
-                        {idea.ai_validated && (
-                            <span className="ai-badge">🤖 AI Enhanced</span>
+                        
+                        {idea.ai_validated ? (
+                            <span className="ai-validated-badge">
+                                🤖 AI Enhanced
+                            </span>
+                        ) : (
+                            <span className="ai-pending-badge">
+                                ⏳ Enhancement Pending
+                            </span>
                         )}
                     </div>
                 </div>
                 
-                <div className="feasibility-score">
+                <div className="feasibility-display">
                     <div 
-                        className="score-circle"
-                        style={{ borderColor: getFeasibilityColor(idea.feasibility_score) }}
+                        className="feasibility-circle"
+                        style={{ borderColor: getScoreColor(idea.feasibility_score) }}
                     >
-                        <span style={{ color: getFeasibilityColor(idea.feasibility_score) }}>
+                        <span style={{ color: getScoreColor(idea.feasibility_score) }}>
                             {idea.feasibility_score.toFixed(1)}
                         </span>
+                        <small>Score</small>
                     </div>
-                    <small>Feasibility</small>
                 </div>
             </div>
-            
-            <div className="idea-content">
-                <div className="original-description">
-                    <h4>Original Idea:</h4>
-                    <p>
-                        {idea.description.length > 150 
-                            ? `${idea.description.substring(0, 150)}...` 
-                            : idea.description}
-                    </p>
-                </div>
-                
-                {idea.ai_refined_pitch && (
+
+            {/* Original Idea Section */}
+            <div className="original-idea-section">
+                <h4>📝 Original Concept</h4>
+                <p className="original-description">{idea.description}</p>
+            </div>
+
+            {/* AI Enhanced Content */}
+            {idea.ai_validated && idea.ai_refined_pitch ? (
+                <div className="ai-enhanced-section">
+                    <div className="ai-section-header">
+                        <h4>🤖 AI-Enhanced Business Pitch</h4>
+                        <button 
+                            className="toggle-refinement-btn"
+                            onClick={() => setShowFullRefinement(!showFullRefinement)}
+                        >
+                            {showFullRefinement ? '🔼 Show Less' : '🔽 Show Full Analysis'}
+                        </button>
+                    </div>
+                    
                     <div className="ai-refined-pitch">
-                        <h4>🤖 AI-Refined Professional Pitch:</h4>
-                        <div className="pitch-content">
-                            <p>
-                                {showFullPitch || idea.ai_refined_pitch.length <= 200
-                                    ? idea.ai_refined_pitch
-                                    : `${idea.ai_refined_pitch.substring(0, 200)}...`}
-                            </p>
-                            {idea.ai_refined_pitch.length > 200 && (
-                                <button 
-                                    className="toggle-pitch-btn"
-                                    onClick={() => setShowFullPitch(!showFullPitch)}
-                                >
-                                    {showFullPitch ? 'Show Less' : 'Show Full Pitch'}
-                                </button>
+                        <div className="refined-content">
+                            {showFullRefinement ? (
+                                <div className="full-refinement">
+                                    <div dangerouslySetInnerHTML={{
+                                        __html: idea.ai_refined_pitch.replace(/\n/g, '<br/>')
+                                    }} />
+                                </div>
+                            ) : (
+                                <p>
+                                    {idea.ai_refined_pitch.length > 200 
+                                        ? `${idea.ai_refined_pitch.substring(0, 200)}...`
+                                        : idea.ai_refined_pitch
+                                    }
+                                </p>
                             )}
                         </div>
                     </div>
-                )}
-                
-                {idea.ai_validated && (
-                    <div className="ai-metrics">
-                        <h4>📊 AI Analysis:</h4>
-                        <div className="metrics-grid">
-                            <div className="metric">
-                                <span className="metric-label">Market Potential</span>
-                                <div className="metric-bar">
+
+                    {/* AI Scoring Dashboard */}
+                    <div className="ai-scoring-dashboard">
+                        <h5>📊 AI Feasibility Analysis</h5>
+                        <div className="scoring-grid">
+                            <div className="score-item">
+                                <div className="score-header">
+                                    <span className="score-icon">📈</span>
+                                    <span className="score-label">Market Potential</span>
+                                </div>
+                                <div className="score-bar">
                                     <div 
-                                        className="metric-fill market"
+                                        className="score-fill market"
                                         style={{ width: `${(idea.market_potential || 0) * 10}%` }}
                                     ></div>
                                 </div>
-                                <span className="metric-value">{idea.market_potential?.toFixed(1)}/10</span>
+                                <span className="score-value">
+                                    {idea.market_potential?.toFixed(1)}/10
+                                </span>
+                                <p className="score-description">
+                                    Market size, demand, and growth opportunities
+                                </p>
                             </div>
-                            
-                            <div className="metric">
-                                <span className="metric-label">Technical Simplicity</span>
-                                <div className="metric-bar">
+
+                            <div className="score-item">
+                                <div className="score-header">
+                                    <span className="score-icon">⚙️</span>
+                                    <span className="score-label">Technical Simplicity</span>
+                                </div>
+                                <div className="score-bar">
                                     <div 
-                                        className="metric-fill technical"
+                                        className="score-fill technical"
                                         style={{ width: `${((11 - (idea.technical_complexity || 5)) * 10)}%` }}
                                     ></div>
                                 </div>
-                                <span className="metric-value">{(11 - (idea.technical_complexity || 5)).toFixed(1)}/10</span>
+                                <span className="score-value">
+                                    {(11 - (idea.technical_complexity || 5)).toFixed(1)}/10
+                                </span>
+                                <p className="score-description">
+                                    Ease of development and implementation
+                                </p>
                             </div>
-                            
-                            <div className="metric">
-                                <span className="metric-label">Resource Efficiency</span>
-                                <div className="metric-bar">
+
+                            <div className="score-item">
+                                <div className="score-header">
+                                    <span className="score-icon">💰</span>
+                                    <span className="score-label">Resource Efficiency</span>
+                                </div>
+                                <div className="score-bar">
                                     <div 
-                                        className="metric-fill resources"
+                                        className="score-fill resources"
                                         style={{ width: `${((11 - (idea.resource_requirements || 5)) * 10)}%` }}
                                     ></div>
                                 </div>
-                                <span className="metric-value">{(11 - (idea.resource_requirements || 5)).toFixed(1)}/10</span>
+                                <span className="score-value">
+                                    {(11 - (idea.resource_requirements || 5)).toFixed(1)}/10
+                                </span>
+                                <p className="score-description">
+                                    Capital needs and operational requirements
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Overall Feasibility Summary */}
+                        <div className="feasibility-summary">
+                            <div className="summary-header">
+                                <h6>🎯 Overall Feasibility Assessment</h6>
+                                <div 
+                                    className="overall-score"
+                                    style={{ color: getScoreColor(idea.feasibility_score) }}
+                                >
+                                    {idea.feasibility_score.toFixed(1)}/10
+                                </div>
+                            </div>
+                            <div className="feasibility-breakdown">
+                                <span>
+                                    Calculated from: Market Potential ({idea.market_potential?.toFixed(1)}) + 
+                                    Technical Simplicity ({(11 - (idea.technical_complexity || 5)).toFixed(1)}) + 
+                                    Resource Efficiency ({(11 - (idea.resource_requirements || 5)).toFixed(1)}) ÷ 3
+                                </span>
                             </div>
                         </div>
                     </div>
-                )}
-            </div>
-            
-            <div className="idea-actions">
-                <div className="action-buttons">
-                    <button 
-                        onClick={loadInsights}
-                        disabled={loadingInsights}
-                        className="insights-btn"
-                    >
-                        {loadingInsights ? 'Loading...' : '💡 AI Insights'}
-                    </button>
-                    
-                    {!idea.ai_validated && (
+                </div>
+            ) : (
+                <div className="no-ai-enhancement">
+                    <div className="enhancement-prompt">
+                        <h4>🚀 Ready for AI Enhancement?</h4>
+                        <p>Get a professional business pitch and feasibility analysis powered by Gemini 2.5 Pro</p>
                         <button 
-                            onClick={enhanceWithAI}
-                            disabled={enhancing}
                             className="enhance-btn"
+                            onClick={handleEnhance}
+                            disabled={enhancing}
                         >
-                            {enhancing ? 'Enhancing...' : '🚀 Enhance with AI'}
-                        </button>
-                    )}
-                </div>
-                
-                <div className="idea-date">
-                    Created {formatDate(idea.created_at)}
-                </div>
-            </div>
-            
-            {insights && (
-                <div className="insights-modal">
-                    <div className="insights-content">
-                        <h3>🔍 AI-Generated Insights for "{idea.title}"</h3>
-                        
-                        <div className="insight-section">
-                            <h4>📈 Market Analysis</h4>
-                            <p>{insights.market_insights}</p>
-                        </div>
-                        
-                        <div className="insight-section">
-                            <h4>⚠️ Risk Assessment</h4>
-                            <p>{insights.risk_assessment}</p>
-                        </div>
-                        
-                        <div className="insight-section">
-                            <h4>🗺️ Implementation Roadmap</h4>
-                            <p>{insights.implementation_roadmap}</p>
-                        </div>
-                        
-                        <button 
-                            onClick={() => setInsights(null)}
-                            className="close-insights-btn"
-                        >
-                            Close
+                            {enhancing ? (
+                                <>⏳ Enhancing with AI...</>
+                            ) : (
+                                <>🤖 Enhance with AI</>
+                            )}
                         </button>
                     </div>
                 </div>
             )}
+
+            {/* Footer */}
+            <div className="idea-footer">
+                <div className="creation-date">
+                    Created {new Date(idea.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    })}
+                </div>
+                
+                {idea.ai_validated && (
+                    <button 
+                        className="re-enhance-btn"
+                        onClick={handleEnhance}
+                        disabled={enhancing}
+                    >
+                        🔄 Re-enhance
+                    </button>
+                )}
+            </div>
         </div>
     );
 };
+
 
 export default IdeaCard;

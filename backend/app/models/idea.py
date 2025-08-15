@@ -1,9 +1,8 @@
-from sqlalchemy import Column, Integer, String, Text, Boolean, DECIMAL, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Text, Boolean, DECIMAL, DateTime, ForeignKey, Enum, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
 from ..database import Base
-
 class DevelopmentStage(str, enum.Enum):
     CONCEPT = "concept"
     RESEARCH = "research"
@@ -18,7 +17,7 @@ class Idea(Base):
     id = Column(Integer, primary_key=True, index=True)
     
     # Required fields for assignment
-    title = Column(String(200), nullable=False)                    # Text field
+    title = Column(String(500), nullable=False)                    # Text field
     description = Column(Text, nullable=False)                     # Text field
     development_stage = Column(Enum(DevelopmentStage), nullable=False)  # Enum field
     ai_validated = Column(Boolean, default=False)                  # Boolean field
@@ -40,8 +39,9 @@ class Idea(Base):
     
     # Relationships
     creator = relationship("User", back_populates="ideas")
-    
+    insights = relationship("IdeaInsight", back_populates="idea", cascade="all, delete-orphan") 
     # Property for calculated field
+    
     @property
     def feasibility_score(self) -> float:
         """Calculate feasibility score from market potential, technical complexity, and resource requirements"""

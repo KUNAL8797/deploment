@@ -28,12 +28,41 @@ export const ideaService = {
     },
 
     async enhanceIdea(id) {
-        const response = await axios.post(`${API_BASE_URL}/ideas/${id}/enhance`);
+        try {
+            const response = await axios.post(`${API_BASE_URL}/ideas/${id}/enhance`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to enhance idea:', error);
+            throw error;
+        }
+    },
+    async getIdeaInsights(id) {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/ideas/${id}/insights`);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to get idea insights:', error);
+            throw error;
+        }
+    },
+        async getIdeaInsights(id) {
+        const response = await axios.get(`${API_BASE_URL}/ideas/${id}/insights`);
+        return response.data;
+    },
+    async getIdeaInsights(id, forceRegenerate = false) {
+        const params = forceRegenerate ? '?force_regenerate=true' : '';
+        const response = await axios.get(`${API_BASE_URL}/ideas/${id}/insights${params}`);
         return response.data;
     },
 
-    async getIdeaInsights(id) {
-        const response = await axios.get(`${API_BASE_URL}/ideas/${id}/insights`);
+    async getInsightsHistory(id) {
+        const response = await axios.get(`${API_BASE_URL}/ideas/${id}/insights/history`);
+        return response.data;
+    },
+
+    async deleteInsights(id) {
+        const response = await axios.delete(`${API_BASE_URL}/ideas/${id}/insights`);
         return response.data;
     }
+    
 };
