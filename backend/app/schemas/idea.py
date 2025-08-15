@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class DevelopmentStage(str, Enum):
@@ -42,11 +42,11 @@ class IdeaResponse(IdeaBase):
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class IdeaListResponse(BaseModel):
     """Schema for paginated idea list responses"""
-    items: list[IdeaResponse]
+    items: List[IdeaResponse]
     total: int
     skip: int
     limit: int

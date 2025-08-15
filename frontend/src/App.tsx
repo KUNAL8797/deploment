@@ -2,23 +2,47 @@ import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
+import IdeaForm from './components/IdeaForm';
+import IdeaList from './components/IdeaList';
 import './App.css';
 
 function AuthenticatedApp() {
-    const { logout, isAuthenticated } = useAuth();
+    const { logout } = useAuth();
+    const [activeTab, setActiveTab] = useState('list');
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+    const handleIdeaCreated = () => {
+        setRefreshTrigger(prev => prev + 1);
+        setActiveTab('list');
+    };
 
     return (
         <div className="App">
             <header className="App-header">
                 <h1>AI Innovation Idea Incubator</h1>
-                <div>
-                    <span>Welcome! </span>
-                    <button onClick={logout}>Logout</button>
-                </div>
+                <nav className="nav-tabs">
+                    <button 
+                        className={activeTab === 'list' ? 'active' : ''}
+                        onClick={() => setActiveTab('list')}
+                    >
+                        My Ideas
+                    </button>
+                    <button 
+                        className={activeTab === 'create' ? 'active' : ''}
+                        onClick={() => setActiveTab('create')}
+                    >
+                        Create Idea
+                    </button>
+                </nav>
+                <button onClick={logout} className="logout-btn">Logout</button>
             </header>
             
-            <main>
-                <p>You are logged in! Ready for Step 3...</p>
+            <main className="main-content">
+                {activeTab === 'list' ? (
+                    <IdeaList refreshTrigger={refreshTrigger} />
+                ) : (
+                    <IdeaForm onSuccess={handleIdeaCreated} />
+                )}
             </main>
         </div>
     );
@@ -28,13 +52,10 @@ function UnauthenticatedApp() {
     const [showRegister, setShowRegister] = useState(false);
 
     const handleLoginSuccess = () => {
-        // Login success is handled by the AuthContext
-        // The component will automatically re-render when authentication state changes
         console.log('Login successful');
     };
 
     const handleRegisterSuccess = () => {
-        // After successful registration, switch back to login view
         setShowRegister(false);
         console.log('Registration successful, please login');
     };
@@ -45,7 +66,7 @@ function UnauthenticatedApp() {
                 <h1>AI Innovation Idea Incubator</h1>
             </header>
             
-            <main>
+            <main className="main-content">
                 {showRegister ? (
                     <div>
                         <Register onSuccess={handleRegisterSuccess} />

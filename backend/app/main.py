@@ -1,15 +1,25 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+import logging
 from dotenv import load_dotenv
+
 from .routers import auth, ideas
 from .database import engine, Base
 
+# Load environment variables
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
+# Create FastAPI app
 app = FastAPI(
     title="AI Innovation Idea Incubator",
     description="""
@@ -20,15 +30,17 @@ app = FastAPI(
     - Complete CRUD operations for innovation ideas
     - Text, enum, boolean, and calculated fields
     - Advanced filtering, pagination, and search
-    - AI-powered idea refinement (coming in Step 4)
+    - AI-powered idea refinement and feasibility scoring
     """,
     version="1.0.0",
-    docs_url="/docs"
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # CORS configuration
 origins = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
     os.getenv("FRONTEND_URL", "http://localhost:3000")
 ]
 
@@ -50,7 +62,7 @@ async def root():
         "message": "AI Innovation Idea Incubator API",
         "version": "1.0.0",
         "status": "running",
-        "features": ["authentication", "ideas-crud", "pagination", "filtering"]
+        "docs": "/docs"
     }
 
 @app.get("/health")
