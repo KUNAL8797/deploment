@@ -1,14 +1,6 @@
-# 🧠 **IdeaForge AI** - AI-Powered Innovation Idea Incubator
-
-
-
+# **IdeaForge AI** - AI-Powered Innovation Idea Incubator
 ![IdeaForge AI Logo](https://img.shields.io/badge/Itor-ready pitches with the power of artificial intelligence**
-
-[
-[
-[
-[
-[![PostgreSQL](https://img.shields.io/ge-ai.demo.com) -  [📖 **Documentation**](https://docs.ideaforge-ai.com) -  [🚀 **Quick Start**](#-quick-start) -  [🎯 **Features**](#-features)
+[PostgreSQL](https://img.shields.io/ge-ai.demo.com) -  [📖 **Documentation**](https://docs.ideaforge-ai.com) -  [🚀 **Quick Start**](#-quick-start) -  [🎯 **Features**](#-features)
 
 
 
@@ -505,77 +497,6 @@ Please use our issue templates when reporting bugs or requesting features:
 
 ***
 
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2025 IdeaForge AI Team
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-***
-
-## 🙏 **Acknowledgments**
-
-### **Technologies & Services**
-- **Google Gemini 2.5 Pro** - Powering our AI-enhanced idea refinement
-- **React Team** - For the incredible frontend framework
-- **FastAPI** - For the high-performance backend framework
-- **PostgreSQL** - For reliable and scalable data storage
-
-### **Inspiration**
-- **Y Combinator** - For inspiring the startup idea validation process
-- **Product Hunt** - For demonstrating effective product showcase techniques
-- **OpenAI ChatGPT** - For pioneering conversational AI interfaces
-
-### **Community**
-Special thanks to all contributors, beta testers, and the open-source community for making IdeaForge AI possible.
-
-***
-
-## 📞 **Support & Contact**
-
-### **Documentation & Resources**
-- 📚 **Full Documentation**: [docs.ideaforge-ai.com](https://docs.ideaforge-ai.com)
-- 🎥 **Video Tutorials**: [YouTube Channel](https://youtube.com/ideaforge-ai)
-- 💬 **Community Forum**: [community.ideaforge-ai.com](https://community.ideaforge-ai.com)
-
-### **Get Help**
-- 🐛 **Report Issues**: [GitHub Issues](https://github.com/yourusername/ideaforge-ai/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/ideaforge-ai/discussions)
-- 📧 **Direct Contact**: support@ideaforge-ai.com
-
-### **Stay Connected**
-- 🐦 **Twitter**: [@IdeaForgeAI](https://twitter.com/IdeaForgeAI)
-- 💼 **LinkedIn**: [IdeaForge AI](https://linkedin.com/company/ideaforge-ai)
-- 📧 **Newsletter**: [Subscribe for Updates](https://ideaforge-ai.com/newsletter)
-
-***
 
 
 
-**Made with ❤️ by the IdeaForge AI Team**
-
-[![GitHub stars](https://img.shields.io/github/starselds.io/github/forks/yous.io/github/issues/yourus
-
-*Last updated: January 16, 2025*
