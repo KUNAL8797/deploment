@@ -7,7 +7,7 @@ import Register from './components/Register';
 import IdeaForm from './components/IdeaForm';
 import IdeaList from './components/IdeaList';
 import './App.css';
-
+import logo from "./assets/logo.png";  // adjust path if needed
 // Theme Toggle Component
 function ThemeToggle() {
     const { theme, toggleTheme } = useTheme();
@@ -45,7 +45,7 @@ function AuthenticatedApp() {
                 <div className="header-container">
                     <div className="header-brand">
                         <div className="brand-logo">
-                            <span className="logo-icon">🧠</span>
+                            <img src={logo} alt="IdeaForge Logo" className="logo-icon" />
                             <h1>IdeaForge AI</h1>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ function UnauthenticatedApp() {
                 <nav className="home-navbar">
                     <div className="navbar-content">
                         <div className="navbar-brand">
-                            <span className="logo-icon">🧠</span>
+                            <img src={logo} alt="IdeaForge Logo" className="logo-icon" />
                             <span className="brand-text">IdeaForge AI</span>
                         </div>
                         <div className="navbar-actions">
@@ -134,7 +134,7 @@ function UnauthenticatedApp() {
             <div className="auth-layout">
                 <header className="auth-header">
                     <div className="auth-brand">
-                        <span className="logo-icon">🧠</span>
+                        <img src={logo} alt="IdeaForge Logo" className="logo-icon" />
                         <h1>IdeaForge AI</h1>
                     </div>
                     <div className="auth-header-actions">

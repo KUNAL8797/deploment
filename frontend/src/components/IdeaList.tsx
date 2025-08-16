@@ -67,6 +67,10 @@ const IdeaList: React.FC<IdeaListProps> = ({ refreshTrigger }) => {
     const [error, setError] = useState('');
     const [expandedIdeas, setExpandedIdeas] = useState<Set<number>>(new Set());
     
+    // Delete functionality states
+    const [deletingIdea, setDeletingIdea] = useState<number | null>(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
+    
     // Insights Status Tracking
     const [insightsStatus, setInsightsStatus] = useState<{[key: number]: InsightsStatus}>({});
     const [checkingInsights, setCheckingInsights] = useState<Set<number>>(new Set());
@@ -218,9 +222,57 @@ const IdeaList: React.FC<IdeaListProps> = ({ refreshTrigger }) => {
         );
     };
 
+    // Delete idea function
+    const handleDeleteIdea = async (ideaId: number, ideaTitle: string) => {
+        setDeletingIdea(ideaId);
+        
+        try {
+            console.log(`Deleting idea ${ideaId}: ${ideaTitle}`);
+            await ideaService.deleteIdea(ideaId);
+            
+            // Remove from local state
+            setIdeas(prev => prev.filter(idea => idea.id !== ideaId));
+            
+            // Update pagination
+            setPagination(prev => ({
+                ...prev,
+                total: prev.total - 1
+            }));
+            
+            // Clear any related state
+            setExpandedIdeas(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(ideaId);
+                return newSet;
+            });
+            
+            setInsightsStatus(prev => {
+                const newStatus = { ...prev };
+                delete newStatus[ideaId];
+                return newStatus;
+            });
+            
+            console.log(`✅ Successfully deleted idea ${ideaId}: ${ideaTitle}`);
+            
+        } catch (error: any) {
+            console.error(`❌ Failed to delete idea ${ideaId}:`, error);
+            setError(`Failed to delete "${ideaTitle}". Please try again.`);
+        } finally {
+            setDeletingIdea(null);
+            setShowDeleteConfirm(null);
+        }
+    };
+
+    // Confirm delete with dialog
+    const confirmDeleteIdea = (ideaId: number, ideaTitle: string) => {
+        if (window.confirm(`Are you sure you want to delete "${ideaTitle}"?\n\nThis action cannot be undone and will remove:\n• The idea and all its content\n• AI-generated enhancements\n• Market insights and analysis\n• All associated data`)) {
+            handleDeleteIdea(ideaId, ideaTitle);
+        }
+    };
+
     // Check insights status for an idea
     const checkInsightsStatus = async (ideaId: number) => {
-        if (checkingInsights.has(ideaId)) return; // Prevent duplicate checks
+        if (checkingInsights.has(ideaId)) return;
         
         setCheckingInsights(prev => new Set(prev).add(ideaId));
         
@@ -784,20 +836,67 @@ const IdeaList: React.FC<IdeaListProps> = ({ refreshTrigger }) => {
                                     </div>
                                 )}
                                 
-                                {/* Footer */}
+                                {/* Enhanced Footer with Delete */}
                                 <div className="idea-footer">
-                                    <div className="idea-date">
-                                        Created {formatDate(idea.created_at)}
+                                    <div className="idea-meta">
+                                        <div className="idea-date">
+                                            Created {formatDate(idea.created_at)}
+                                        </div>
+                                        {idea.ai_validated && idea.updated_at !== idea.created_at && (
+                                            <div className="idea-updated">
+                                                Enhanced {formatDate(idea.updated_at)}
+                                            </div>
+                                        )}
                                     </div>
-                                    {idea.ai_validated && (
-                                        <button 
-                                            onClick={() => handleEnhanceIdea(idea.id)}
-                                            disabled={enhancing === idea.id}
-                                            className="re-enhance-btn"
-                                        >
-                                            {enhancing === idea.id ? '⏳ Re-enhancing...' : '🔄 Re-enhance'}
-                                        </button>
-                                    )}
+                                    
+                                    <div className="idea-actions">
+                                        {idea.ai_validated && (
+                                            <button 
+                                                onClick={() => handleEnhanceIdea(idea.id)}
+                                                disabled={enhancing === idea.id}
+                                                className="re-enhance-btn"
+                                                title="Re-enhance with AI"
+                                            >
+                                                {enhancing === idea.id ? (
+                                                    <>⏳ Re-enhancing...</>
+                                                ) : (
+                                                    <>🔄 Re-enhance</>
+                                                )}
+                                            </button>
+                                        )}
+                                        
+                                        <div className="danger-actions">
+                                            {showDeleteConfirm === idea.id ? (
+                                                <div className="delete-confirm">
+                                                    <span className="confirm-text">Delete "{idea.title.length > 20 ? idea.title.substring(0, 20) + '...' : idea.title}"?</span>
+                                                    <div>
+                                                        <button
+                                                            onClick={() => handleDeleteIdea(idea.id, idea.title)}
+                                                            disabled={deletingIdea === idea.id}
+                                                            className="confirm-delete-btn"
+                                                        >
+                                                            {deletingIdea === idea.id ? '⏳' : '✓ Yes'}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setShowDeleteConfirm(null)}
+                                                            className="cancel-delete-btn"
+                                                        >
+                                                            ✕ No
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => setShowDeleteConfirm(idea.id)}
+                                                    className="delete-btn"
+                                                    title="Delete idea"
+                                                    disabled={deletingIdea !== null}
+                                                >
+                                                    🗑️ Delete
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -845,7 +944,7 @@ const IdeaList: React.FC<IdeaListProps> = ({ refreshTrigger }) => {
                 <div className="bulk-actions">
                     <div className="bulk-info">
                         <small>
-                            💡 Tip: Insights are saved to database for instant access. Click "🔄 View/Update" to see cached insights or regenerate fresh analysis.
+                            💡 Tip: Expand ideas to see complete AI-generated business pitches. Click delete to permanently remove ideas and all associated data.
                         </small>
                     </div>
                 </div>

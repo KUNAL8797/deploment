@@ -591,4 +591,48 @@ async def get_insights_history(
         "is_ai_generated": insights.is_ai_generated
     }
 
+@router.delete("/{idea_id}")
+async def delete_idea(
+    idea_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Delete an idea (only by owner)"""
+    try:
+        # Find the user's idea
+        db_idea = db.query(Idea).filter(
+            Idea.id == idea_id,
+            Idea.created_by == current_user.id
+        ).first()
+        
+        if not db_idea:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Idea not found or you don't have permission to delete it"
+            )
+        
+        # Get idea title for logging
+        idea_title = db_idea.title
+        
+        # Delete the idea (cascading will handle related insights)
+        db.delete(db_idea)
+        db.commit()
+        
+        logger.info(f"User {current_user.id} deleted idea {idea_id}: '{idea_title}'")
+        
+        return {
+            "message": "Idea deleted successfully",
+            "deleted_idea_id": idea_id,
+            "deleted_idea_title": idea_title
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Error deleting idea {idea_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete idea"
+        )
 

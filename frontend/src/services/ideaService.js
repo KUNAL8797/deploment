@@ -36,6 +36,15 @@ export const ideaService = {
             throw error;
         }
     },
+    async deleteIdea(id) {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/ideas/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting idea:', error);
+            throw error;
+        }
+    },
     async getIdeaInsights(id) {
         try {
             const response = await axios.get(`${API_BASE_URL}/ideas/${id}/insights`);
