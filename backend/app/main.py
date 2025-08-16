@@ -145,7 +145,8 @@ async def add_security_headers(request: Request, call_next):
         response.headers["Permissions-Policy"] = SecurityHeaders.get_permissions_policy()
         
         # Remove server information
-        response.headers.pop("Server", None)
+        if "Server" in response.headers:
+            del response.headers["Server"]
         
         # Cache control for sensitive endpoints
         if request.url.path.startswith("/auth") or request.url.path.startswith("/users"):
