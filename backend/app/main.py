@@ -54,7 +54,7 @@ app = FastAPI(
 if settings.is_production:
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["*.onrender.com", "localhost", "127.0.0.1"]
+        allowed_hosts=["*.onrender.com", "localhost", "127.0.0.1", "deployment-6p8p-git-main-kunals-projects-6bb44ad3.vercel.app"]
     )
 
 # Metrics and logging middleware
