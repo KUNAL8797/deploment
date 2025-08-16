@@ -54,7 +54,7 @@ app = FastAPI(
 if settings.is_production:
     app.add_middleware(
         TrustedHostMiddleware,
-        allowed_hosts=["*.onrender.com", "localhost", "127.0.0.1", "deployment-6p8p-git-main-kunals-projects-6bb44ad3.vercel.app"]
+        allowed_hosts=["*.onrender.com", "localhost", "127.0.0.1", "deploment-6p8p-gdpo3lhm9-kunals-projects-6bb44ad3.vercel.app"]
     )
 
 # Metrics and logging middleware
@@ -96,7 +96,7 @@ if settings.is_production:
 
 # CORS configuration with validation
 # Include the deployed frontend URL
-cors_origins = settings.cors_origins + ["https://deployment-6p8p-git-main-kunals-projects-6bb44ad3.vercel.app"]
+cors_origins = settings.cors_origins + ["https://deploment-6p8p-gdpo3lhm9-kunals-projects-6bb44ad3.vercel.app"]
 validated_origins = validate_cors_origins(cors_origins)
 logger.info(f"CORS origins configured: {validated_origins}")
 
