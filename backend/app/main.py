@@ -39,7 +39,7 @@ app = FastAPI(
 
 # CORS configuration
 origins = [
-    "https://ideaforge-ai-kunal8797-kunals-projects-6bb44ad3.vercel.app",
+    "https://deploment-git-main-kunals-projects-6bb44ad3.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     os.getenv("FRONTEND_URL", "http://localhost:3000")
