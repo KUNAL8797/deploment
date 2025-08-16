@@ -762,48 +762,5 @@ git push origin feature/amazing-feature
 
 ***
 
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-***
-
-## 🙏 **Acknowledgments**
-
-### **Technologies Used:**
-- **Google Gemini 2.5 Pro** - AI-powered content enhancement
-- **React & TypeScript** - Modern frontend development
-- **FastAPI & Python** - High-performance backend API
-- **PostgreSQL** - Reliable relational database
-- **Docker & Kubernetes** - Containerization and orchestration
-
-### **Special Thanks:**
-- Google AI team for Gemini API access
-- React community for excellent documentation
-- FastAPI creators for the amazing framework
-- Open source contributors worldwide
-
-***
-
-## 📞 **Support & Contact**
-
-- **🐛 Issues**: [GitHub Issues](https://github.com/yourusername/ideaforge-ai/issues)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/ideaforge-ai/discussions)
-- **📧 Email**: support@ideaforge-ai.com
-- **📚 Documentation**: [Full Documentation Site](https://docs.ideaforge-ai.com)
-
-***
-
-
-
-**Built with ❤️ by the IdeaForge AI Team**
-
-[![GitHub stars](https://img.shields.io/github/stars/yourusernametwitter/follow/IdeaForge the Future. 🚀**
-
-*IdeaForge AI - Where Innovation Meets Intelligence*
-
-
-
-***
 
 *Last updated: January 16, 2025 | Version 1.0.0*
