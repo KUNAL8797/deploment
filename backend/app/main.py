@@ -95,7 +95,9 @@ if settings.is_production:
     app.middleware("http")(security_logging_middleware)
 
 # CORS configuration with validation
-validated_origins = validate_cors_origins(settings.cors_origins)
+# Include the deployed frontend URL
+cors_origins = settings.cors_origins + ["https://deploment-6p8p-git-main-kunals-projects-6bb44ad3.vercel.app"]
+validated_origins = validate_cors_origins(cors_origins)
 logger.info(f"CORS origins configured: {validated_origins}")
 
 app.add_middleware(
