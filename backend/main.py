@@ -4,8 +4,8 @@ import os
 import logging
 from dotenv import load_dotenv
 
-from .routers import auth, ideas
-from .database import engine, Base
+from .app.routers import auth, ideas
+from .app.database import engine, Base
 
 # Load environment variables
 load_dotenv()
