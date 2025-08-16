@@ -1,4 +1,4 @@
-# 🧠 **IdeaForge AI** - AI-Powered Innovation Idea Incubator
+# **IdeaForge AI** - AI-Powered Innovation Idea Incubator
 
 
 
@@ -7,7 +7,7 @@
 **Transform your breakthrough concepts into investor-ready pitches with the power of artificial intelligence**
 
 [
-[](https://www.typescriptlangps://img.shields.io/badge/Coverage[📖 **API Docs**](http://localhost:8000/docs) -  [🎯 **Quick Start**](#-quick-start)
+[][📖 **API Docs**](http://localhost:8000/docs) -  [🎯 **Quick Start**](#-quick-start)
 
 
 
