@@ -22,9 +22,8 @@ export const AuthProvider = ({ children }) => {
             const formData = new FormData();
             formData.append('username', username);
             formData.append('password', password);
-
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/auth/token`,
+            const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+            const response = await axios.post(`${API_BASE_URL}/auth/token`,
                 formData,
                 {
                     headers: {
