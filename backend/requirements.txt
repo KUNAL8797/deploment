@@ -12,3 +12,5 @@ redis==5.0.1
 python-dotenv==1.1.1
 pydantic-settings==2.0.3
 psutil==5.9.6
+email-validator==2.2.0
+dnspython==2.7.0
