@@ -5,48 +5,43 @@ import os
 import secrets
 from typing import List
 
-# Use pydantic-settings for BaseSettings
-from pydantic_settings import BaseSettings
 
-
-class Settings(BaseSettings):
+class Settings:
     """Application settings with environment variable support"""
     
-    # Application
-    app_name: str = "AI Innovation Idea Incubator"
-    app_version: str = "1.0.0"
-    environment: str = os.getenv("ENVIRONMENT", "development")
-    
-    # Security
-    secret_key: str = os.getenv("SECRET_KEY", secrets.token_urlsafe(32))
-    algorithm: str = "HS256"
-    access_token_expire_minutes: int = 30
-    
-    # Database
-    database_url: str = os.getenv("DATABASE_URL", "sqlite:///./ai_incubator.db")
-    
-    # Redis Cache
-    redis_url: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
-    
-    # CORS
-    cors_origins: List[str] = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ]
-    
-    # AI Service
-    gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
-    
-    # Logging
-    log_level: str = os.getenv("LOG_LEVEL", "INFO")
-    
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self):
+        # Application
+        self.app_name = "AI Innovation Idea Incubator"
+        self.app_version = "1.0.0"
+        self.environment = os.getenv("ENVIRONMENT", "development")
+        
+        # Security
+        self.secret_key = os.getenv("SECRET_KEY", secrets.token_urlsafe(32))
+        self.algorithm = "HS256"
+        self.access_token_expire_minutes = 30
+        
+        # Database
+        self.database_url = os.getenv("DATABASE_URL", "sqlite:///./ai_incubator.db")
+        
+        # Redis Cache
+        self.redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+        
+        # AI Service
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY", "")
+        
+        # Logging
+        self.log_level = os.getenv("LOG_LEVEL", "INFO")
         
         # Parse CORS origins from environment
         cors_env = os.getenv("CORS_ORIGINS", "")
         if cors_env:
             self.cors_origins = [origin.strip() for origin in cors_env.split(",")]
+        else:
+            # Default CORS origins for development
+            self.cors_origins = [
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+            ]
         
         # Fix PostgreSQL URL for SQLAlchemy compatibility
         if self.database_url.startswith("postgres://"):
@@ -61,10 +56,6 @@ class Settings(BaseSettings):
     def is_development(self) -> bool:
         """Check if running in development environment"""
         return self.environment.lower() == "development"
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
 
 
 # Global settings instance
