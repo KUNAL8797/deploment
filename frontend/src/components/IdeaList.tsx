@@ -673,10 +673,41 @@ const IdeaList: React.FC<IdeaListProps> = ({ refreshTrigger }) => {
                                                 className="toggle-content-btn"
                                                 onClick={() => toggleIdeaExpansion(idea.id)}
                                             >
-                                                {expandedIdeas.has(idea.id) ? '🔼 Collapse' : '🔽 Expand Full Analysis'}
+                                                <span>{expandedIdeas.has(idea.id) ? '🔼' : '🔽'}</span>
+        <span>{expandedIdeas.has(idea.id) ? 'Collapse Analysis' : 'Expand Full Analysis'}</span>
                                             </button>
                                         </div>
-                                        
+                                        <button 
+    className="expand-btn"
+    onClick={() => toggleIdeaExpansion(idea.id)}
+>
+    <span>📖</span>
+    <span>Read Complete AI Analysis</span>
+    <span>→</span>
+</button>
+<button 
+    className={getInsightsButtonClass(idea.id)}
+    onClick={() => loadAdditionalInsights(idea.id)}
+    disabled={insightsModal.loading || checkingInsights.has(idea.id)}
+>
+    {insightsModal.loading && insightsModal.ideaId === idea.id ? (
+        <>
+            <span>⏳</span>
+            <span>Loading Insights...</span>
+        </>
+    ) : (
+        <>
+            <span>{insightsStatus[idea.id]?.has_insights ? '🔄' : '💡'}</span>
+            <span>
+                {insightsStatus[idea.id]?.has_insights 
+                    ? 'View/Update Market Insights' 
+                    : 'Generate Market Insights'
+                }
+            </span>
+            <span>→</span>
+        </>
+    )}
+</button>
                                         <div className="ai-refined-display">
                                             {expandedIdeas.has(idea.id) ? (
                                                 <div className="full-ai-analysis">
