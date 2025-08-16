@@ -1,12 +1,3 @@
-Got it 👍 — this Setup & Deployment Guide is excellent in content but suffers from the same issues as your other docs:
-	•	Random cutoffs (text, Check prerequisites, etc.)
-	•	Mixed code blocks without formatting
-	•	Missing structure in some parts
-
-I’ll polish and professionalize it into a clear, structured, and developer-friendly guide.
-
-
-
 ⚙️ Complete Setup & Deployment Guide – IdeaForge AI
 
 📌 Overview
